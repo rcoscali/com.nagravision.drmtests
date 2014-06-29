@@ -18,21 +18,19 @@ package com.nagravision.drmtests.tests;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Iterator;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
-import org.w3c.dom.Attr;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Attribute;
+import org.jsoup.nodes.Attributes;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 
 import android.content.res.AssetManager;
 import android.util.Base64;
 import android.util.Log;
 
-import com.nagravision.drmtests.ADrmTestListActivity;
+import com.nagravision.drmtests.ADrmTestDetailActivity;
 
 public class HtmlTestReport {
 	private Document doc = null;
@@ -48,6 +46,12 @@ public class HtmlTestReport {
 	private static final String ID_RESULT = "id-result";
 	private static final String ID_STATUS = "id-status";
 
+	private static final String COLOR_GREEN = "#33ff33";
+	private static final String COLOR_RED = "#ff3333";
+
+	private static final String STATUS_OK = "OK";
+	private static final String STATUS_KO = "KO";
+
 	public HtmlTestReport() {
 		InputStream ims = null;
 		try {
@@ -56,12 +60,10 @@ public class HtmlTestReport {
 			Log.e("drmTests", e1.toString());
 			e1.printStackTrace();
 		}
-		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		try {
-			DocumentBuilder db = dbf.newDocumentBuilder();
-			doc = db.parse(new InputSource(ims));
-		} catch (Exception e) {
-			Log.e("drmTests", e.toString());
+			doc = Jsoup.parse(ims, "UTF-8", "");
+		} catch (Exception e2) {
+			Log.e("drmTests", e2.toString());
 		}
 		setId(doc.getElementById(ID_ID));
 		setSynopsis(doc.getElementById(ID_SYNOPSIS));
@@ -76,29 +78,24 @@ public class HtmlTestReport {
 	 *            the log to set
 	 */
 	public void appendLog(String log) {
-		NodeList nl = this.log.getChildNodes();
-		org.w3c.dom.Text log_text = null;
-		for (int i = 0; i < nl.getLength(); i++) {
-			if (nl.item(i) instanceof org.w3c.dom.Text)
-				log_text = (org.w3c.dom.Text) nl.item(i);
-		}
-		if (log_text != null) {
-			log_text.appendData("<br/>\n" + log);
-		}
+		this.log.append("<br/>\n" + log);
 	}
 
 
 	private AssetManager getAssets() {
-		return ADrmTestListActivity.getContext().getAssets();
+		return ADrmTestDetailActivity.getContext().getAssets();
 	}
 
 	public String getDocumentAsDataUri()
 	{
 		StringBuffer ret = new StringBuffer("");
-		ret.append("data:text/html;base64,");
-		ret.append(Base64.encodeToString(doc.getTextContent().getBytes(),
-				Base64.URL_SAFE));
+		ret.append(Base64.encodeToString(doc.outerHtml().getBytes(),
+				Base64.DEFAULT | Base64.NO_WRAP));
 		return ret.toString();
+	}
+
+	public String getDocumentAsHtml() {
+		return doc.outerHtml();
 	}
 
 	/**
@@ -148,15 +145,7 @@ public class HtmlTestReport {
 	 *            the id to set
 	 */
 	public void setId(String id) {
-		NodeList nl = this.id.getChildNodes();
-		org.w3c.dom.Text id_text = null;
-		for (int i = 0; i < nl.getLength(); i++) {
-			if (nl.item(i) instanceof org.w3c.dom.Text)
-				id_text = (org.w3c.dom.Text) nl.item(i);
-		}
-		if (id_text != null) {
-			id_text.setData(id);
-		}
+		this.id.text(id);
 	}
 
 	/**
@@ -172,15 +161,7 @@ public class HtmlTestReport {
 	 *            the log to set
 	 */
 	public void setLog(String log) {
-		NodeList nl = this.log.getChildNodes();
-		org.w3c.dom.Text log_text = null;
-		for (int i = 0; i < nl.getLength(); i++) {
-			if (nl.item(i) instanceof org.w3c.dom.Text)
-				log_text = (org.w3c.dom.Text) nl.item(i);
-		}
-		if (log_text != null) {
-			log_text.setData(log);
-		}
+		this.log.text(log);
 	}
 
 	/**
@@ -195,29 +176,19 @@ public class HtmlTestReport {
 	 *            the result to set
 	 */
 	public void setResult(String result) {
-		NodeList nl = this.result.getChildNodes();
-		org.w3c.dom.Text result_text = null;
-		for (int i = 0; i < nl.getLength(); i++) {
-			if (nl.item(i) instanceof org.w3c.dom.Text)
-				result_text = (org.w3c.dom.Text) nl.item(i);
-		}
-		if (result_text != null) {
-			result_text.setData(result);
-		}
+		this.result.text(result);
 	}
 
 	public void setStatus(boolean status) {
-		Attr fontcolor = this.status.getAttributeNode("color");
-		fontcolor.setValue(status ? "#00cc00" : "#cc0000");
-		NodeList nl = this.status.getChildNodes();
-		org.w3c.dom.Text status_text = null;
-		for (int i = 0; i < nl.getLength(); i++) {
-			if (nl.item(i) instanceof org.w3c.dom.Text)
-				status_text = (org.w3c.dom.Text) nl.item(i);
-		}
-		if (status_text !=  null)
-		{
-			status_text.setData(status ? "OK" : "KO");
+		this.status.text(status ? STATUS_OK : STATUS_KO);
+		Attributes attrs = this.status.attributes();
+		Iterator<Attribute> it = attrs.iterator();
+		while (it.hasNext()) {
+			Attribute attr = it.next();
+			if (attr.getKey().equals("color")) {
+				attr.setValue(status ? COLOR_GREEN : COLOR_RED);
+				break;
+			}
 		}
 	}
 
@@ -241,14 +212,6 @@ public class HtmlTestReport {
 	 *            the synopsis to set
 	 */
 	public void setSynopsis(String synopsis) {
-		NodeList nl = this.synopsis.getChildNodes();
-		org.w3c.dom.Text synopsis_text = null;
-		for (int i = 0; i < nl.getLength(); i++) {
-			if (nl.item(i) instanceof org.w3c.dom.Text)
-				synopsis_text = (org.w3c.dom.Text) nl.item(i);
-		}
-		if (synopsis_text != null) {
-			synopsis_text.setData(synopsis);
-		}
+		this.synopsis.text(synopsis);
 	}
 }

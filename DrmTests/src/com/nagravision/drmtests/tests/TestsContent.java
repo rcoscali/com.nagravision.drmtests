@@ -49,11 +49,6 @@ public class TestsContent {
 		public DrmTestItem(String id, String synopsis) {
 			this.id = id;
 			this.synopsis = synopsis;
-			this.report = new HtmlTestReport();
-			this.report.setId(id);
-			this.report.setSynopsis(synopsis);
-			this.report.setResult("running...");
-			this.report.setStatus(false);
 		}
 
 		/**
@@ -81,16 +76,30 @@ public class TestsContent {
 			return mCtxt;
 		}
 
+		public StringBuffer getHtml() {
+			return new StringBuffer(this.report.getDocumentAsHtml());
+		}
+
 		public String getHtmlData() {
 			return getResult().toString();
 		}
 
 		/**
 		 * Test result getter
+		 * 
 		 * @return the result of the test
 		 */
 		public StringBuffer getResult() {
 			return new StringBuffer(this.report.getDocumentAsDataUri());
+		}
+
+		public void init()
+		{
+			this.report = new HtmlTestReport();
+			this.report.setId(id);
+			this.report.setSynopsis(synopsis);
+			this.report.setResult("running...");
+			this.report.setStatus(false);
 		}
 
 		@Override

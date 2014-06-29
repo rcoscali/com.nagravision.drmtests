@@ -81,7 +81,7 @@ public class GetDrmEnginesTest extends TestsContent.DrmTestItem
 			status = status | ("NagraVision DRM plug-in".equals(drmEngines[i]));
 		}
 
-		appendLog("\nStatus: PASSED\n");
+		setStatus(status);
 		return getResult().toString();
 	}
 

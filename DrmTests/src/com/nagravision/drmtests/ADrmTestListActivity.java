@@ -59,6 +59,7 @@ implements ADrmTestListFragment.Callbacks {
 
 	public ADrmTestListActivity()
 	{
+		ADrmTestListActivity.context = getBaseContext();
 	}
 
 	@Override

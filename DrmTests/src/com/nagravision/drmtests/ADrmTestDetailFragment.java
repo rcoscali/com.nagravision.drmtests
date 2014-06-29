@@ -45,6 +45,7 @@ public class ADrmTestDetailFragment extends Fragment {
 	private TestsContent.DrmTestItem mItem;
 
 	private View mRootView = null;
+
 	/**
 	 * Mandatory empty constructor for the fragment manager to instantiate the
 	 * fragment (e.g. upon screen orientation changes).
@@ -84,10 +85,13 @@ public class ADrmTestDetailFragment extends Fragment {
 
 		// Show the test content as text in a TextView.
 		if (mItem != null) {
+			mItem.init();
 			Log.v("drmtests", "ADrmTestDetailFragment start item");
 			mItem.setView(((WebView) getRootView().findViewById(R.id.adrmtest_detail)));
-			((WebView) getRootView().findViewById(R.id.adrmtest_detail))
-					.loadData(mItem.getHtmlData(), "text/html", "base64");
+			WebView wv = (WebView) getRootView().findViewById(R.id.adrmtest_detail);
+			wv.getSettings().setDefaultFontSize(10);
+			wv.getSettings().setDefaultFixedFontSize(10);
+			wv.loadData(mItem.getHtmlData(), "text/html", "base64");
 			mItem.execute();
 		}
 

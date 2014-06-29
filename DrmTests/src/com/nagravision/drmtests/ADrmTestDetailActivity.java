@@ -16,6 +16,7 @@
 
 package com.nagravision.drmtests;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -33,6 +34,12 @@ import android.view.MenuItem;
  * more than a {@link ADrmTestDetailFragment}.
  */
 public class ADrmTestDetailActivity extends FragmentActivity {
+
+	private static Context context = null;
+
+	public static Context getContext() {
+		return context;
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -82,5 +89,11 @@ public class ADrmTestDetailActivity extends FragmentActivity {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	protected void onStart() {
+		ADrmTestDetailActivity.context = getBaseContext();
+		super.onStart();
 	}
 }
