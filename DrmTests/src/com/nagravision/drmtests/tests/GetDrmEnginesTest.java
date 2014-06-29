@@ -77,13 +77,15 @@ public class GetDrmEnginesTest extends TestsContent.DrmTestItem
 		boolean status = false;
 		for (int i = 0; i < drmEngines.length; i++)
 		{
-			appendLog("DRM #" + i + ": " + drmEngines[i] + "\n");
 			status = status | ("NagraVision DRM plug-in".equals(drmEngines[i]));
+			if ("NagraVision DRM plug-in".equals(drmEngines[i]))
+				appendLog("DRM #" + i + ": <font color=\"#ff0000\">" + drmEngines[i] + "</font>\n");
+			else
+				appendLog("DRM #" + i + ": " + drmEngines[i] + "\n");
 		}
 
 		setStatus(status);
 		return getResult().toString();
 	}
-
-
 }
+

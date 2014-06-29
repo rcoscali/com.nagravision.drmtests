@@ -106,7 +106,7 @@ public class TestsContent {
 		protected void onPostExecute(String value)
 		{
 			Log.v("drmtests", "onPostExecute: " + value);
-			appendLog("Test execution terminated.\n");
+			setResult("done.\n");
 			mView.loadData(getResult().toString(), "text/html", "base64");
 		}
 
