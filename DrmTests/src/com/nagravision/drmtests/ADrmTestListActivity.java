@@ -19,7 +19,9 @@ package com.nagravision.drmtests;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 
 import com.nagravision.drmtests.tests.CanHandlePathTest;
 import com.nagravision.drmtests.tests.CanHandleUriTest;
@@ -67,6 +69,28 @@ implements ADrmTestListFragment.Callbacks {
 		super.onCreate(savedInstanceState);
 		if (savedInstanceState == null)
 		{
+			Log.v("drmtests", "getPackageCodePath:"
+					+ getContext().getPackageCodePath());
+			Log.v("drmtests", "getPackageResourcePath:"
+					+ getContext().getPackageResourcePath());
+			Log.v("drmtests", "getCacheDir:"
+					+ getContext().getCacheDir().getAbsolutePath());
+			Log.v("drmtests", "getExternalCacheDir:"
+					+ getContext().getExternalCacheDir().getAbsolutePath());
+			Log.v("drmtests",
+					"getDataDirectory:" + Environment.getDataDirectory());
+			Log.v("drmtests",
+					"getDownloadCacheDirectory:"
+							+ Environment.getDownloadCacheDirectory());
+			Log.v("drmtests",
+					"getExternalStorageDirectory:"
+							+ Environment.getExternalStorageDirectory());
+			Log.v("drmtests",
+					"getExternalStoragePublicDirectory:"
+							+ Environment
+									.getExternalStoragePublicDirectory(STORAGE_SERVICE));
+			Log.v("drmtests",
+					"getRootDirectory:" + Environment.getRootDirectory());
 			// Add all tests
 			// TODO: use PM & reflexion API to add tests classes
 			mTestsContent = new TestsContent(this);

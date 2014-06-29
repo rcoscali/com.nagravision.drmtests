@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.webkit.WebView;
@@ -67,6 +68,10 @@ public class TestsContent {
 		{
 			Log.v("drmtests", "doInBackground");
 			return run();
+		}
+
+		private AssetManager getAssets() {
+			return mCtxt.getAssets();
 		}
 
 		/**
