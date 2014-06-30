@@ -26,6 +26,7 @@ import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
+import android.content.Context;
 import android.content.res.AssetManager;
 import android.util.Base64;
 import android.util.Log;
@@ -52,10 +53,10 @@ public class HtmlTestReport {
 	private static final String STATUS_OK = "OK";
 	private static final String STATUS_KO = "KO";
 
-	public HtmlTestReport() {
+	public HtmlTestReport(Context ctxt) {
 		InputStream ims = null;
 		try {
-			ims = getAssets().open("TemplateTest.html");
+			ims = ctxt.getAssets().open("TemplateTest.html");
 		} catch (IOException e1) {
 			Log.e("drmTests", e1.toString());
 			e1.printStackTrace();

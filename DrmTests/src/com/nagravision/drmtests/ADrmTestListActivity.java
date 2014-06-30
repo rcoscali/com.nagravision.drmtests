@@ -16,7 +16,6 @@
 
 package com.nagravision.drmtests;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
@@ -53,15 +52,18 @@ implements ADrmTestListFragment.Callbacks {
 	 */
 	private boolean mTwoPane;
 	private TestsContent mTestsContent = null;
-	private static Context context = null;
 
-	public static Context getContext() {
-		return context;
-	}
-
-	public ADrmTestListActivity()
-	{
-		ADrmTestListActivity.context = getBaseContext();
+	public ADrmTestListActivity() {
+		Log.v("drmtests", "Adding tests items / context = " + this);
+		// Add all tests
+		// TODO: use PM & reflexion API to add tests classes
+		mTestsContent = new TestsContent(this);
+		mTestsContent.addItem(new GetDrmEnginesTest(this, "1",
+				"Get DRM engines"));
+		mTestsContent.addItem(new CanHandleUriTest(this, "2",
+				"Can Handle(URI, mime)"));
+		mTestsContent.addItem(new CanHandlePathTest(this, "3",
+				"Can Handle(Path, mime)"));
 	}
 
 	@Override
@@ -70,13 +72,13 @@ implements ADrmTestListFragment.Callbacks {
 		if (savedInstanceState == null)
 		{
 			Log.v("drmtests", "getPackageCodePath:"
-					+ getContext().getPackageCodePath());
+					+ getBaseContext().getPackageCodePath());
 			Log.v("drmtests", "getPackageResourcePath:"
-					+ getContext().getPackageResourcePath());
+					+ getBaseContext().getPackageResourcePath());
 			Log.v("drmtests", "getCacheDir:"
-					+ getContext().getCacheDir().getAbsolutePath());
-			Log.v("drmtests", "getExternalCacheDir:"
-					+ getContext().getExternalCacheDir().getAbsolutePath());
+					+ getBaseContext().getCacheDir().getAbsolutePath());
+			// Log.v("drmtests", "getExternalCacheDir:"
+			// + getBaseContext().getExternalCacheDir().getAbsolutePath());
 			Log.v("drmtests",
 					"getDataDirectory:" + Environment.getDataDirectory());
 			Log.v("drmtests",
@@ -88,15 +90,9 @@ implements ADrmTestListFragment.Callbacks {
 			Log.v("drmtests",
 					"getExternalStoragePublicDirectory:"
 							+ Environment
-									.getExternalStoragePublicDirectory(STORAGE_SERVICE));
+							.getExternalStoragePublicDirectory(STORAGE_SERVICE));
 			Log.v("drmtests",
 					"getRootDirectory:" + Environment.getRootDirectory());
-			// Add all tests
-			// TODO: use PM & reflexion API to add tests classes
-			mTestsContent = new TestsContent(this);
-			mTestsContent.addItem(new GetDrmEnginesTest(this, "1", "Get DRM engines"));
-			mTestsContent.addItem(new CanHandleUriTest(this, "2", "Can Handle(URI, mime)"));
-			mTestsContent.addItem(new CanHandlePathTest(this, "2", "Can Handle(Path, mime)"));
 		}
 		setContentView(R.layout.activity_adrmtest_list);
 

@@ -30,7 +30,7 @@ public class GetDrmEnginesTest extends TestsContent.DrmTestItem
 
 	public GetDrmEnginesTest(Context ctxt, String id, String content)
 	{
-		super(id, content);
+		super(ctxt, id, content);
 	}
 
 	@Override

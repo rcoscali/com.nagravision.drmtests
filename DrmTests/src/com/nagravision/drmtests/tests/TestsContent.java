@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Map;
 
 import android.content.Context;
-import android.content.res.AssetManager;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.webkit.WebView;
@@ -47,7 +46,8 @@ public class TestsContent {
 
 		private WebView mView = null;
 
-		public DrmTestItem(String id, String synopsis) {
+		public DrmTestItem(Context ctxt, String id, String synopsis) {
+			this.mCtxt = ctxt;
 			this.id = id;
 			this.synopsis = synopsis;
 		}
@@ -68,10 +68,6 @@ public class TestsContent {
 		{
 			Log.v("drmtests", "doInBackground");
 			return run();
-		}
-
-		private AssetManager getAssets() {
-			return mCtxt.getAssets();
 		}
 
 		/**
@@ -100,7 +96,7 @@ public class TestsContent {
 
 		public void init()
 		{
-			this.report = new HtmlTestReport();
+			this.report = new HtmlTestReport(mCtxt);
 			this.report.setId(id);
 			this.report.setSynopsis(synopsis);
 			this.report.setResult("running...");
@@ -110,7 +106,7 @@ public class TestsContent {
 		@Override
 		protected void onPostExecute(String value)
 		{
-			Log.v("drmtests", "onPostExecute: " + value);
+			Log.v("drmtests", "onPostExecute");
 			setResult("done.\n");
 			mView.loadData(getResult().toString(), "text/html", "base64");
 		}
@@ -124,7 +120,7 @@ public class TestsContent {
 
 		protected void onProgressUpdate(String value)
 		{
-			Log.v("drmtests", "onProgressUpdate= " + value);
+			Log.v("drmtests", "onProgressUpdate");
 			mView.loadData(getResult().toString(), "text/html", "base64");
 		}
 

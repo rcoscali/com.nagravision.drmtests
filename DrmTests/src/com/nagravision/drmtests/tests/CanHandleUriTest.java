@@ -21,6 +21,7 @@ import android.drm.DrmErrorEvent;
 import android.drm.DrmEvent;
 import android.drm.DrmInfoEvent;
 import android.drm.DrmManagerClient;
+import android.os.Environment;
 import android.util.Log;
 
 public class CanHandleUriTest extends TestsContent.DrmTestItem
@@ -30,7 +31,7 @@ public class CanHandleUriTest extends TestsContent.DrmTestItem
 
 	public CanHandleUriTest(Context ctxt, String id, String content)
 	{
-		super(id, content);
+		super(ctxt, id, content);
 	}
 
 	@Override
@@ -70,7 +71,10 @@ public class CanHandleUriTest extends TestsContent.DrmTestItem
 			}
 		});
 
-		String sdcardPath = "file:///system/tmp";//Environment.getExternalStorageDirectory().getPath();
+		String sdcardPath = Environment.getExternalStoragePublicDirectory(
+				Context.STORAGE_SERVICE)
+				.getPath();
+		sdcardPath = "file:///system/tmp";
 		boolean status = true;
 
 		appendLog("Querying " + sdcardPath + "/CENC_SD_time_MPD.mpd\n");
