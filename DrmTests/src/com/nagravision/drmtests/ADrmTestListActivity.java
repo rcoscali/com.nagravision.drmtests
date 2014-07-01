@@ -69,31 +69,30 @@ implements ADrmTestListFragment.Callbacks {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		if (savedInstanceState == null)
-		{
-			Log.v("drmtests", "getPackageCodePath:"
-					+ getBaseContext().getPackageCodePath());
-			Log.v("drmtests", "getPackageResourcePath:"
+
+		Log.v("drmtests", "getPackageCodePath:"
+				+ getBaseContext().getPackageCodePath());
+		Log.v("drmtests", "getPackageResourcePath:"
 					+ getBaseContext().getPackageResourcePath());
-			Log.v("drmtests", "getCacheDir:"
-					+ getBaseContext().getCacheDir().getAbsolutePath());
-			// Log.v("drmtests", "getExternalCacheDir:"
-			// + getBaseContext().getExternalCacheDir().getAbsolutePath());
-			Log.v("drmtests",
-					"getDataDirectory:" + Environment.getDataDirectory());
-			Log.v("drmtests",
-					"getDownloadCacheDirectory:"
-							+ Environment.getDownloadCacheDirectory());
-			Log.v("drmtests",
-					"getExternalStorageDirectory:"
-							+ Environment.getExternalStorageDirectory());
-			Log.v("drmtests",
-					"getExternalStoragePublicDirectory:"
-							+ Environment
-							.getExternalStoragePublicDirectory(STORAGE_SERVICE));
-			Log.v("drmtests",
-					"getRootDirectory:" + Environment.getRootDirectory());
-		}
+		Log.v("drmtests", "getCacheDir:"
+				+ getBaseContext().getCacheDir().getAbsolutePath());
+		// Log.v("drmtests", "getExternalCacheDir:"
+		// + getBaseContext().getExternalCacheDir().getAbsolutePath());
+		Log.v("drmtests",
+				"getDataDirectory:" + Environment.getDataDirectory());
+		Log.v("drmtests",
+				"getDownloadCacheDirectory:"
+						+ Environment.getDownloadCacheDirectory());
+		Log.v("drmtests",
+				"getExternalStorageDirectory:"
+						+ Environment.getExternalStorageDirectory());
+		Log.v("drmtests",
+				"getExternalStoragePublicDirectory:"
+						+ Environment
+						.getExternalStoragePublicDirectory(STORAGE_SERVICE));
+		Log.v("drmtests",
+				"getRootDirectory:" + Environment.getRootDirectory());
+		
 		setContentView(R.layout.activity_adrmtest_list);
 
 		if (findViewById(R.id.adrmtest_detail_container) != null) {
