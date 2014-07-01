@@ -27,11 +27,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 import android.content.Context;
-import android.content.res.AssetManager;
 import android.util.Base64;
 import android.util.Log;
-
-import com.nagravision.drmtests.ADrmTestDetailActivity;
 
 public class HtmlTestReport {
 	private Document doc = null;
@@ -80,11 +77,6 @@ public class HtmlTestReport {
 	 */
 	public void appendLog(String log) {
 		this.log.append("<br/>\n" + log);
-	}
-
-
-	private AssetManager getAssets() {
-		return ADrmTestDetailActivity.getContext().getAssets();
 	}
 
 	public String getDocumentAsDataUri()
