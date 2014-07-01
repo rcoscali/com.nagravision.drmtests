@@ -129,7 +129,7 @@ public class HtmlTestReport {
 	/**
 	 * @param id the id to set
 	 */
-	public void setId(Element id) {
+	private void setId(Element id) {
 		this.id = id;
 	}
 
@@ -145,7 +145,7 @@ public class HtmlTestReport {
 	 * @param log
 	 *            the log to set
 	 */
-	public void setLog(Element log) {
+	private void setLog(Element log) {
 		this.log = log;
 	}
 
@@ -160,7 +160,7 @@ public class HtmlTestReport {
 	/**
 	 * @param result the result to set
 	 */
-	public void setResult(Element result) {
+	private void setResult(Element result) {
 		this.result = result;
 	}
 
@@ -189,14 +189,14 @@ public class HtmlTestReport {
 	 * @param statusKo
 	 *            the statusKo to set
 	 */
-	public void setStatus(Element status) {
+	private void setStatus(Element status) {
 		this.status = status;
 	}
 
 	/**
 	 * @param synopsis the synopsis to set
 	 */
-	public void setSynopsis(Element synopsis) {
+	private void setSynopsis(Element synopsis) {
 		this.synopsis = synopsis;
 	}
 
