@@ -47,8 +47,8 @@ public class HtmlTestReport {
 	private static final String COLOR_GREEN = "#33ff33";
 	private static final String COLOR_RED = "#ff3333";
 
-	private static final String STATUS_OK = "OK";
-	private static final String STATUS_KO = "KO";
+	private static final String STATUS_OK = "PASS";
+	private static final String STATUS_KO = "FAIL";
 
 	public HtmlTestReport(Context ctxt) {
 		InputStream ims = null;

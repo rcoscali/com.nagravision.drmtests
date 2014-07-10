@@ -16,6 +16,13 @@
 
 package com.nagravision.drmtests.tests;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Enumeration;
+import java.util.Vector;
+
 import android.content.Context;
 import android.drm.DrmErrorEvent;
 import android.drm.DrmEvent;
@@ -72,47 +79,91 @@ public class CanHandlePathTest extends TestsContent.DrmTestItem
 			}
 		});
 
-		String sdcardPath = Environment.getExternalStoragePublicDirectory(
-				Context.STORAGE_SERVICE).getPath();
-		// sdcardPath = "/system/tmp";
 		boolean status = true;
 
-		appendLog("Querying " + sdcardPath + "/CENC_SD_time_MPD.mpd\n");
-		boolean canhdl = mDrmMgrClt.canHandle(sdcardPath + "/CENC_SD_time_MPD.mpd", null);
-		appendLog("DRM fwk say: " + canhdl + " "
-				+ (canhdl ? "<PASSED>" : "<FAILED>") + "\n");
-		status = status & (canhdl == true);
-
-		appendLog("Querying " + sdcardPath + "/CENC_HD_time_MPD.mpd");
-		canhdl = mDrmMgrClt.canHandle(sdcardPath + "/CENC_HD_time_MPD.mpd", null);
-		appendLog("DRM fwk say: " + canhdl + " "
-				+ (canhdl ? "<PASSED>" : "<FAILED>") + "\n");
-		status = status & (canhdl == true);
-
-		appendLog("Querying " + sdcardPath + "/manifest1.mpd");
-		canhdl = mDrmMgrClt.canHandle(sdcardPath + "/manifest1.mpd", null);
-		appendLog("DRM fwk say: " + canhdl + " "
-				+ (canhdl ? "<PASSED>" : "<FAILED>") + "\n");
-		status = status & (canhdl == true);
-
-		appendLog("Querying " + sdcardPath + "/manifest2.mpd");
-		canhdl = mDrmMgrClt.canHandle(sdcardPath + "/manifest2.mpd", null);
-		appendLog("DRM fwk say: " + canhdl + " "
-				+ (canhdl ? "<PASSED>" : "<FAILED>") + "\n");
-		status = status & (canhdl == true);
-
-		appendLog("Querying " + sdcardPath + "/1.mpd");
-		canhdl = mDrmMgrClt.canHandle(sdcardPath + "/manifest1.mpd", null);
-		appendLog("DRM fwk say: " + canhdl + " "
-				+ (canhdl ? "<FAILED>" : "<PASSED>") + "\n");
-		status = status & (canhdl != true);
-
-		appendLog("Querying " + sdcardPath + "/2.mpd");
-		canhdl = mDrmMgrClt.canHandle(sdcardPath + "/manifest2.mpd", null);
-		appendLog("DRM fwk say: " + canhdl + " "
-				+ (canhdl ? "<FAILED>" : "<PASSED>") + "\n");
-		status = status & (canhdl != true);
-
+		Vector<String> mpdFiles = new Vector<String>();
+		mpdFiles.addElement("CENC_SD_time_MPD.mpd");
+		mpdFiles.addElement("CENC_HD_time_MPD.mpd");
+		mpdFiles.addElement("manifest1.mpd");
+		mpdFiles.addElement("manifest2.mpd");
+		mpdFiles.addElement("1.mpd");
+		mpdFiles.addElement("2.mpd");
+		
+		Vector<String> directories = new Vector<String>();
+		directories.addElement(getContext().getPackageCodePath());
+		directories.addElement(getContext().getPackageResourcePath());
+		directories.addElement(getContext().getCacheDir().getAbsolutePath());
+		directories.addElement(Environment.getDataDirectory().getAbsolutePath());
+		directories.addElement(Environment.getDownloadCacheDirectory().getAbsolutePath());
+		directories.addElement(Environment.getExternalStorageDirectory().getAbsolutePath());
+		directories.addElement(Environment.getExternalStoragePublicDirectory(Context.STORAGE_SERVICE).getAbsolutePath());
+		directories.addElement(Environment.getRootDirectory().getAbsolutePath());
+		directories.addElement(Environment.getRootDirectory().getAbsolutePath()+"/tmp");
+		
+		boolean canhdl = false;
+		
+		for (Enumeration<String> e = mpdFiles.elements();
+			 e.hasMoreElements();)			 
+		{
+			boolean found = false;
+			String filename = (String)e.nextElement();
+			for (Enumeration<String> f = directories.elements();
+				 f.hasMoreElements();)
+			{			
+				String dirname = (String)f.nextElement();
+				File mpd = new File(dirname, filename);
+				if (mpd.canRead())
+				{
+					found = true;
+					appendLog("Querying " + mpd.getAbsolutePath());
+					canhdl = mDrmMgrClt.canHandle(mpd.getAbsolutePath(), null);
+					appendLog("DRM : " + canhdl + " "
+							+ (canhdl ? "<PASS>" : "<FAIL>") + "\n");
+					status = status & (canhdl == true);
+				}
+			}				
+			if (!found)
+			{
+				// Didn't found the MPD file: create one with data from Assets
+				File mpd = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES), filename);
+				try {
+					if (mpd.createNewFile())
+					{
+						FileOutputStream fos = null;
+						InputStream ims = null;
+						try {
+							fos = new FileOutputStream(mpd);
+							ims = getContext().getAssets().open(filename);
+							byte[] buf = new byte[4096];
+							while (ims.available() > 0)
+							{
+								int rdsz = ims.read(buf, 0, Math.max(1024, ims.available()));
+								fos.write(buf, 0, rdsz);
+								fos.flush();
+							}
+							fos.close();
+							ims.close();
+						} catch (IOException e1) {
+							Log.e("drmTests", e1.toString());
+							e1.printStackTrace();
+						}
+						if (mpd.canRead())
+						{
+							found = true;
+							appendLog("Querying " + mpd.getAbsolutePath());
+							canhdl = mDrmMgrClt.canHandle(mpd.getAbsolutePath(), null);
+							appendLog("DRM : " + canhdl + " "
+									+ (canhdl ? "<PASS>" : "<FAIL>") + "\n");
+							status = status & (canhdl == true);
+						}
+					}
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		}
+		
 		appendLog("Querying video/mp4 mimeType");
 		canhdl = mDrmMgrClt.canHandle("", "video/mp4");
 		appendLog("DRM fwk say: " + canhdl + " "
