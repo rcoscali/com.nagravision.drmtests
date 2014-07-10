@@ -97,6 +97,7 @@ public class CanHandlePathTest extends TestsContent.DrmTestItem
 		directories.addElement(Environment.getDownloadCacheDirectory().getAbsolutePath());
 		directories.addElement(Environment.getExternalStorageDirectory().getAbsolutePath());
 		directories.addElement(Environment.getExternalStoragePublicDirectory(Context.STORAGE_SERVICE).getAbsolutePath());
+		directories.addElement(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES).getAbsolutePath());
 		directories.addElement(Environment.getRootDirectory().getAbsolutePath());
 		directories.addElement(Environment.getRootDirectory().getAbsolutePath()+"/tmp");
 		
